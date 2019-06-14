@@ -1,0 +1,195 @@
+<!--
+ 
+(c) World Corp
+2019-06-14
+let you post/retrieve online message by SOAP protocol
+
+Online WSDL 1.1 SOAP generator 0.2
+Julien Blitte
+ 
+-->
+<definitions
+	xmlns:tns="us.world_corp.my_soap_forum.wsdl"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:xsd1="us.world_corp.my_soap_forum.xsd"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns="http://schemas.xmlsoap.org/wsdl/" name="let you post/retrieve online message by SOAP protocol" targetNamespace="us.world_corp.my_soap_forum.wsdl">
+	<!--  definition of datatypes  -->
+	<types>
+		<schema
+			xmlns="http://www.w3.org/2000/10/XMLSchema" targetNamespace="us.world_corp.my_soap_forum.xsd">
+			<element name="listCars">
+				<complexType>
+					<all>
+						<element name="value" type="string"/>
+					</all>
+				</complexType>
+			</element>
+			<element name="listOrders">
+				<complexType>
+					<all>
+						<element name="value" type="string"/>
+					</all>
+				</complexType>
+			</element>
+			<element name="infoCar">
+				<complexType>
+					<all>
+						<element name="value" type="string"/>
+					</all>
+				</complexType>
+			</element>
+			<element name="idCar">
+				<complexType>
+					<all>
+						<element name="value" type="string"/>
+					</all>
+				</complexType>
+			</element>
+			<element name="name">
+				<complexType>
+					<all>
+						<element name="value" type="string"/>
+					</all>
+				</complexType>
+			</element>
+			<element name="surName">
+				<complexType>
+					<all>
+						<element name="value" type="string"/>
+					</all>
+				</complexType>
+			</element>
+			<element name="result">
+				<complexType>
+					<all>
+						<element name="value" type="int"/>
+					</all>
+				</complexType>
+			</element>
+			<element name="condition">
+				<complexType>
+					<all>
+						<element name="value" type="string"/>
+					</all>
+				</complexType>
+			</element>
+			<element name="void">
+				<complexType>
+					<sequence/>
+				</complexType>
+			</element>
+		</schema>
+	</types>
+	<!--  response messages  -->
+	<message name="returns_listCars">
+		<part name="listCars" type="xsd:listCars"/>
+	</message>
+	<message name="returns_infoCar">
+		<part name="infoCar" type="xsd:infoCar"/>
+	</message>
+	<message name="returns_result">
+		<part name="result" type="xsd:result"/>
+	</message>
+	<message name="returns_listOrders">
+		<part name="listOrders" type="xsd:listOrders"/>
+	</message>
+	<!--  request messages  -->
+	<message name="lastCars">
+		<part name="void" type="xsd:void"/>
+	</message>
+	<message name="getInfo">
+		<part name="idCar" type="xsd:idCar"/>
+	</message>
+	<message name="findCars">
+		<part name="condition" type="xsd:condition"/>
+	</message>
+	<message name="setOrder">
+		<part name="idCar" type="xsd:idCar"/>
+		<part name="name" type="xsd:name"/>
+		<part name="surName" type="xsd:surName"/>
+	</message>
+	<message name="getOrders">
+		<part name="void" type="xsd:void"/>
+	</message>
+	<!--  server's services  -->
+	<portType name="my SOAP forum">
+		<operation name="lastCars">
+			<input message="tns:lastCars"/>
+			<output message="tns:returns_listCars"/>
+		</operation>
+		<operation name="getInfo">
+			<input message="tns:getInfo"/>
+			<output message="tns:returns_infoCar"/>
+		</operation>
+		<operation name="findCars">
+			<input message="tns:findCars"/>
+			<output message="tns:returns_listCars"/>
+		</operation>
+		<operation name="setOrder">
+			<input message="tns:setOrder"/>
+			<output message="tns:returns_result"/>
+		</operation>
+		<operation name="getOrders">
+			<input message="tns:getOrders"/>
+			<output message="tns:returns_listOrders"/>
+		</operation>
+	</portType>
+	<!--  server encoding  -->
+	<binding name="my SOAP forum_webservices" type="tns:my SOAP forum">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="lastCars">
+			<soap:operation soapAction="urn:xmethods-delayed-quotes#lastCars"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		<operation name="getInfo">
+			<soap:operation soapAction="urn:xmethods-delayed-quotes#getInfo"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		<operation name="findCars">
+			<soap:operation soapAction="urn:xmethods-delayed-quotes#findCars"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		<operation name="setOrder">
+			<soap:operation soapAction="urn:xmethods-delayed-quotes#setOrder"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		<operation name="getOrders">
+			<soap:operation soapAction="urn:xmethods-delayed-quotes#getOrders"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:xmethods-delayed-quotes" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+	</binding>
+	<!--  access to service provider  -->
+	<service name="exemple">
+		<port name="exemple_0" binding="my SOAP forum_webservices">
+			<soap:address location="hhttp://tc.geeksforless.net/~user10/SOAP/task2/server/index.php"/>
+		</port>
+	</service>
+</definitions>
