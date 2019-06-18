@@ -90,8 +90,9 @@ class Model
         $model = $_POST['model'];
         $color = $_POST['color'];
         $list = $this->client->findCars($volume, $speed, $year, $price, $brand, $model, $color);
-        $this->array['%VAL_LISTCAR%'] = $this->createCarTable($list);
-        $this->array['%SECTION_LISTCARS%'] = '';
+        print_r($list);
+        //$this->array['%VAL_LISTCAR%'] = $this->createCarTable($list);
+        //$this->array['%SECTION_LISTCARS%'] = '';
     } 
     
     public function InfoCars()
@@ -102,7 +103,7 @@ class Model
         {
             $row = $list[0];
             $this->array['%VAL_ID%'] = $row['id'];
-            $this->array['%VAL_BRAND%'] = $row['brad'];
+            $this->array['%VAL_BRAND%'] = $row['brand'];
             $this->array['%VAL_MODEL%'] = $row['model'];
             $this->array['%VAL_YEAR%'] = $row['year'];
             $this->array['%VAL_VOLUME%'] = $row['volume'];

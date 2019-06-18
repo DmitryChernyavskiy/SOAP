@@ -38,39 +38,40 @@ class carMarket
     public function findCars($volume, $speed, $year, $price, $brand, $model, $color)
     {
         $query = $this->DB->connect()->setTableName("cars")->SetFild("id");
-        if (isset($volume))
+        if (isset($volume) && $volume!=0)
         {
             $query->setConditions("volume", $volume);
         };
-        if (isset($speed))
+        if (isset($speed) && $speed!=0)
         {
             $query->setConditions("speed", $speed);
         };
-        if (isset($year))
+        if (isset($year) && $year!=0)
         {
             $query->setConditions("year", $year);
         };
-        if (isset($price))
+        if (isset($price) && $price!=0)
         {
             $query->setConditions("price", $price);
         };    
         $query->select();
         //brand
-        if (isset($brand))
+        if (isset($brand) && $brand!="")
         {
             $query->setTableName("brands")->setConditions("brand", $brand)->setJoinConditions("cars.id_brand = brands.id")->innerJoin();
         };
         //model
-        if (isset($model))
+        if (isset($model) && $model!="")
         {
             $query->setTableName("models")->setConditions("model", $model)->setJoinConditions("cars.id_model = models.id")->innerJoin();
         };
         //color
-        if (isset($color))
+        if (isset($color) && $color!="")
         {
             $query->setTableName("colors_cars")->setJoinConditions("cars.id = colors_cars.id_car")->innerJoin()->
             setTableName("colors")->setConditions("color", $color)->setJoinConditions("colors_cars.id_color = colors.id")->innerJoin();
         };
+        return "hhh".$query->getQuery();
         $query->execution();
         return $res;
     }

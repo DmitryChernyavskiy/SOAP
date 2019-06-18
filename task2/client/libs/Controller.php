@@ -11,17 +11,25 @@ class Controller
         $this->view = new View(TEMPLATE);	
 
         print_r($_POST);
-        if(isset($_POST['infoCar']))
+        $operation = $_POST['button'];
+        if(isset($operation))
+        {	
+            if($operation=="Buy") //checkorder
+            {	
+                $this->pageBuyCar();
+            }
+            elseif($operation=="Find")
+            {
+                $this->pageFindCar();
+            }
+            else
+            {
+                $this->pageDefault();	
+            }
+        }
+        elseif(isset($_POST['infoCar']))
         {	
             $this->pageInfoCar();
-        }
-        elseif(isset($_POST['name']))
-        {	
-            $this->pageBuyCar();
-        }
-        elseif(isset($_POST['volume']) || isset($_POST['speed']) || isset($_POST['year']) || isset($_POST['price']) || isset($_POST['brand']) || isset($_POST['model']) || isset($_POST['color']))
-        {	
-            $this->pageFindCar();
         }
         else
         {

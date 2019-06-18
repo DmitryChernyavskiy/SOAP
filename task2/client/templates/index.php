@@ -18,6 +18,10 @@
        h4 {
          Margin-bottom: 5px;  
        }
+
+       p {
+         Margin-bottom: 3px;  
+       }
       </style>
 </head>
 <body>
@@ -66,17 +70,17 @@
         </tr>
       </table>
       <div style="%SECTION_CLIENTDATA%">
-        <h3>Enter client details</h3>
-        <h4>Name</h4>
+        <h4>Enter client details</h4>
+        <p>Name</p>
         <input type = "text" class = "boxadd" name = "name" value = %VAL_NAME%> <samp class = "ErrorMsg">%ERROR_NAME%</samp><br>
-        <h4>Surname</h4>
+        <p>Surname</p>
         <input type = "text" class = "boxadd" name = "surname" value = %VAL_SURNAME%> <samp class = "ErrorMsg">%ERROR_NAME%</samp><br>
-        <h4>Payment method</h4>
+        <p>Payment method</p>
         <select name = "paymentMethod" class = "box">
             %SELECT%
         </select>
       </div>
-      <input type = "submit" Value = %VAL_BUTTON% ><br>
+      <input type = "submit" name = "button" Value = %VAL_BUTTON% ><br>
     </form>
     <form method="POST" style="%SECTION_CLIENTDATA%">
         <input type = "submit" Value = Cencel ><br>
