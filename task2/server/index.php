@@ -4,10 +4,11 @@
     include_once "./config.php";
 
 
-    //$dfd = new carMarket();
-    //print_r($dfd->lastCars());
+    $dfd = new carMarket();
+    //print_r($dfd->getInfo(1));
 
-    $server = new SoapServer('http://tc.geeksforless.net/~user10/SOAP/task2/server/carmarket.wsdl');
+    //$server = new SoapServer('/home/user10/public_html/SOAP/task2/server/carmarket.wsdl');
+    $server = new SoapServer('http://173.212.224.161/SOAP/task2/server/carmarket.wsdl');
     $server->setClass('carMarket');
     $server->handle();
 

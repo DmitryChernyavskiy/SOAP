@@ -1,8 +1,10 @@
 <?php
-include ('config.php');
-include ('libs/Controller.php');
-include ('libs/View.php');
-include ('libs/Model.php');
+
+include_once 'config.php';
+include_once 'libs/Controller.php';
+include_once 'libs/View.php';
+include_once 'libs/Model.php';
+
 try
 {
   $obj = new Controller();

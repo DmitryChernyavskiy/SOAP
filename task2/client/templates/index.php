@@ -31,6 +31,10 @@
           <th>Values</th>
         </tr>
         <tr>
+          <td>Id</td>
+          <td><input type = "text" class = "box" name = "idCar" value = %VAL_ID%></td>
+        </tr>
+        <tr>
           <td>Brand</td>
           <td><input type = "text" class = "box" name = "brand" value = %VAL_BRAND%></td>
         </tr>
@@ -58,7 +62,7 @@
         </tr>
         <tr>
           <td>Price</td>
-          <td><input type="number" class = "box" name = "price" value = %VAL_PRICE% min = "100" max = "400"></td>
+          <td><input type="number" class = "box" name = "price" value = %VAL_PRICE% min = "10000" max = "40000"></td>
         </tr>
       </table>
       <div style="%SECTION_CLIENTDATA%">
@@ -74,8 +78,11 @@
       </div>
       <input type = "submit" Value = %VAL_BUTTON% ><br>
     </form>
+    <form method="POST" style="%SECTION_CLIENTDATA%">
+        <input type = "submit" Value = Cencel ><br>
+    </form>
 </div>
-<div style=%SECTION_LISTCARS%>
+<div style="%SECTION_LISTCARS%">
   <table border="1" width="50%">
     <caption>List of cars</caption>
     <tr>

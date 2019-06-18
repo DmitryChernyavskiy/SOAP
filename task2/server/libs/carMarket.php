@@ -1,10 +1,10 @@
 <?php
 include_once "./libs/MySQL.php";
 include_once "./config.php";
+
 class carMarket
 {
     private $DB;
-
     function __construct()
     {
         $this->DB = new MySQL(TYPE_MYSQL_DB, HOST_MYSQL_DB, NAME_MYSQL_DB, USER_MYSQL_DB, PASS_MYSQL_DB);
@@ -14,8 +14,7 @@ class carMarket
     {
         unset($this->DB);
     }
-
-    public function lastCars()
+    public function listCars()
     {
         $res = $this->DB->connect()->setTableName("cars")->SetFild("id")->select()->
             setTableName("brands")->SetFild("brand")->setJoinConditions("cars.id_brand = brands.id")->leftJoin()->
@@ -23,10 +22,9 @@ class carMarket
         return $res;
         //return array(array("id"=>1, "name"=>"test1"), array("id"=>2, "name"=>"test1"));
     }
-
     public function getInfo($idCar)
     {
-        if (isset($idCar) && isset($name) && isset($surName))
+        if (isset($idCar))
         {
             $res = $this->DB->connect()->setTableName("cars")->SetFild("id")->SetFild("volume")->SetFild("speed")->SetFild("year")->SetFild("price")->setConditions("id", $idCar)->select()->
                 setTableName("brands")->SetFild("brand")->setJoinConditions("cars.id_brand = brands.id")->leftJoin()->
@@ -37,7 +35,6 @@ class carMarket
         }
         return array();
     }
-
     public function findCars($volume, $speed, $year, $price, $brand, $model, $color)
     {
         $query = $this->DB->connect()->setTableName("cars")->SetFild("id");
@@ -72,12 +69,11 @@ class carMarket
         if (isset($color))
         {
             $query->setTableName("colors_cars")->setJoinConditions("cars.id = colors_cars.id_car")->innerJoin()->
-            setTableName("colors")->setConditions("color", $color)->setJoinConditions("colors_cars.id_color = colors.id")->innerJoin()
+            setTableName("colors")->setConditions("color", $color)->setJoinConditions("colors_cars.id_color = colors.id")->innerJoin();
         };
         $query->execution();
         return $res;
     }
-
     public function setOrder($idCar, $name, $surName)
     {
         if (isset($idCar) && isset($name) && isset($surName))
@@ -87,7 +83,6 @@ class carMarket
         }
         return false;
     }
-
     public function getOrders()
     {
         $res = $this->DB->connect()->setTableName("orders_cars")->SetFild("id")->SetFild("name")->SetFild("surName")->select()->execution();

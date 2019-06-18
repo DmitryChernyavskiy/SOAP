@@ -1,15 +1,17 @@
-<?php 
+<?php
+
+include_once 'config.php';
 
 class Model
 { 
     private $array;
     private $select;
+    private $client;
     
     public function __construct()
     {
-        //$client = new SoapClient("http://tc.geeksforless.net/~user10/SOAP/task2/server/?WSDL", array('cache_wsdl'=>WSDL_CACHE_NONE));
-
-        //$res = $client->lastCars();
+        
+        $this->client = new SoapClient(SOAP_SERVER, array('cache_wsdl'=>WSDL_CACHE_NONE));
 
         $this->array = array('%TITLE%'=>'Car market');
 	    $this->select = Array('credit card', 'cash');
@@ -24,6 +26,7 @@ class Model
         $this->array['%ERROR_EMAIL%'] = '';
         $this->array['%ERROR_TYPEMSG%'] = '';
         $this->array['%ERROR_TEXT%'] = '';
+        $this->array['%VAL_ID%'] = '';
         $this->array['%VAL_BRAND%'] = '';
         $this->array['%VAL_MODEL%'] = '';
         $this->array['%VAL_YEAR%'] = '';
@@ -33,6 +36,12 @@ class Model
         $this->array['%VAL_PRICE%'] = '';
         $this->array['%VAL_NAME%'] = '';
         $this->array['%VAL_SURNAME%'] = '';
+        $this->array['%VAL_LISTCAR%'] = '';
+        $this->array['%VAL_BUTTON%'] = 'Find';
+        $this->array['%SECTION_SELECT%'] = 'display: none;';
+        $this->array['%SECTION_CLIENTDATA%'] = 'display: none;';
+        $this->array['%SECTION_LISTCARS%'] = 'display: none;';
+        
     }
     
     private function createSelectList($selected)
@@ -44,7 +53,7 @@ class Model
             $str = $str.'<option value = '.$i.' '.($selected == $i ? 'selected': '').'>'.$this->select[$i].'</option>';
         }
         $this->array['%SELECT%'] = $str;
-        
+        $this->array['%SECTION_SELECT%'] = '';
     }
        
     public function getArray()
@@ -52,6 +61,74 @@ class Model
     	return $this->array;	
     }
     
+    private function createCarTable($list)
+    {
+        $res = "";
+        foreach ($list as $row)
+        {
+            $res .= '<tr><td>'.$row['id'].'</td><td>'.$row['brand'].'</td><td>'.$row['model'].'</td><td align="center">'
+                    . '<form method="POST" style="margin: 5;"><input type = "hidden" name = "infoCar" Value = '.$row['id'].'><input type = "submit" Value = "info"></form>'
+                    . '</td></tr>';
+        }
+        return $res;
+    }
+
+    public function listCars()
+    {
+        $list = $this->client->listCars();
+        $this->array['%VAL_LISTCAR%'] = $this->createCarTable($list);
+        $this->array['%SECTION_LISTCARS%'] = '';
+    } 
+    
+    public function findCars()
+    {
+        $volume = $_POST['volume'];
+        $speed = $_POST['speed'];
+        $year = $_POST['year'];
+        $price = $_POST['price'];
+        $brand = $_POST['brand'];
+        $model = $_POST['model'];
+        $color = $_POST['color'];
+        $list = $this->client->findCars($volume, $speed, $year, $price, $brand, $model, $color);
+        $this->array['%VAL_LISTCAR%'] = $this->createCarTable($list);
+        $this->array['%SECTION_LISTCARS%'] = '';
+    } 
+    
+    public function InfoCars()
+    {
+        $this->resetForm();
+        $list = $this->client->getInfo($_POST['infoCar']);
+        if (0 <= count($list))
+        {
+            $row = $list[0];
+            $this->array['%VAL_ID%'] = $row['id'];
+            $this->array['%VAL_BRAND%'] = $row['brad'];
+            $this->array['%VAL_MODEL%'] = $row['model'];
+            $this->array['%VAL_YEAR%'] = $row['year'];
+            $this->array['%VAL_VOLUME%'] = $row['volume'];
+            $this->array['%VAL_SPEED%'] = $row['speed'];
+            $this->array['%VAL_COLOR%'] = $row['color'];
+            $this->array['%VAL_PRICE%'] = $row['price'];
+            $this->array['%VAL_BUTTON%'] = 'Buy';
+            $this->array['%SECTION_SELECT%'] = '';
+            $this->array['%SECTION_CLIENTDATA%'] = '';
+        }
+        else
+        {
+            unset($_POST);
+        }
+    }  
+    
+    public function setOrder()
+    {
+        $name = trim($_POST['name']);
+        $surname = trim($_POST['surname']);
+        $idCar = trim($_POST['idCar']);
+        
+        $this->client->setOrder($idCar, $name, $surName);
+    }
+
+
     public function checkForm()
     {
         $return_flag = true;
@@ -104,24 +181,5 @@ class Model
         
     	return $return_flag;			
     }
-    
-    public function sendEmail()
-    {
-        /*$Name = trim($_POST['Name']);
-        $typemessage = trim($_POST['typemessage']);
-        $email = trim($_POST['email']);
-        $text = nl2br(trim($_POST['text']));
-       
-        $header = 'From: '.$Name.' <'.$email.'>';
-        $subject = $this->select[$typemessage].' (from '.$Name.' IP='.getHostByName(getHostName()).')';
-        
-        if(!mail(ADMINMAIL, $subject, $text, $header))
-        {
-            $this->array['%ERRORS%'] = 'Error send message';
-            return false;
-        }
-    	$this->resetForm();
-    	$this->createSelectList(0);
-    	$this->array['%ERRORS%'] = 'the letter was sent';*/
-    }		
+	
 }
