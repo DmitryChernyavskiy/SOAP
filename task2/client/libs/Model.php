@@ -90,9 +90,9 @@ class Model
         $model = $_POST['model'];
         $color = $_POST['color'];
         $list = $this->client->findCars($volume, $speed, $year, $price, $brand, $model, $color);
-        print_r($list);
-        //$this->array['%VAL_LISTCAR%'] = $this->createCarTable($list);
-        //$this->array['%SECTION_LISTCARS%'] = '';
+        //print_r($list);
+        $this->array['%VAL_LISTCAR%'] = $this->createCarTable($list);
+        $this->array['%SECTION_LISTCARS%'] = '';
     } 
     
     public function InfoCars()
@@ -125,8 +125,9 @@ class Model
         $name = trim($_POST['name']);
         $surname = trim($_POST['surname']);
         $idCar = trim($_POST['idCar']);
+        $paymentMethod = trim($_POST['paymentMethod']);
         
-        $this->client->setOrder($idCar, $name, $surName);
+        echo $this->client->setOrder($idCar, $name, $surName, "cash");
     }
 
 

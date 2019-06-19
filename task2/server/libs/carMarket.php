@@ -54,35 +54,46 @@ class carMarket
         {
             $query->setConditions("price", $price);
         };    
-        $query->select();
+        $query->select()->setTableName("brands")->SetFild("brand");
         //brand
         if (isset($brand) && $brand!="")
         {
-            $query->setTableName("brands")->setConditions("brand", $brand)->setJoinConditions("cars.id_brand = brands.id")->innerJoin();
+            $query->setConditions("brand", $brand)->setJoinConditions("cars.id_brand = brands.id")->innerJoin();
+        }
+        else
+        {
+            $query->setJoinConditions("cars.id_brand = brands.id")->leftJoin();
         };
         //model
+        $query->setTableName("models")->SetFild("model", $model);
         if (isset($model) && $model!="")
         {
-            $query->setTableName("models")->setConditions("model", $model)->setJoinConditions("cars.id_model = models.id")->innerJoin();
+            $query->setConditions("model", $model)->setJoinConditions("cars.id_model = models.id")->innerJoin();
+        }
+        else
+        {
+            $query->setJoinConditions("cars.id_model = models.id")->leftJoin();
         };
         //color
         if (isset($color) && $color!="")
         {
             $query->setTableName("colors_cars")->setJoinConditions("cars.id = colors_cars.id_car")->innerJoin()->
-            setTableName("colors")->setConditions("color", $color)->setJoinConditions("colors_cars.id_color = colors.id")->innerJoin();
+            setTableName("colors")->SetFild("color", $color)->setConditions("color", $color);
         };
-        return "hhh".$query->getQuery();
-        $query->execution();
+        $res = $query->execution();
         return $res;
     }
-    public function setOrder($idCar, $name, $surName)
+    public function setOrder($idCar, $name, $surName, $pay)
     {
-        if (isset($idCar) && isset($name) && isset($surName))
+        if (isset($idCar) && isset($name) && isset($surName) && isset($pay))
         {
-            $res = $this->DB->connect()->setTableName("orders_cars")->SetFild("name", $name)->SetFild("surName", $surName)->setConditions("id", $idCar)->insert()->execution();
+            $res = $this->DB->connect()->setTableName("orders_cars")->SetFild("id_car", $idCar)->SetFild("name", $name)->SetFild("surName", $surName)->SetFild("pay", $pay)->insert();
+            return "777".$name."_".$surname."_".$idCar."_".$paymentMethod."_".$this->DB->getQuery();
+
+            $this->DB->execution();
             return true;
         }
-        return false;
+        return "777".$name."_".$surname."_".$idCar."_".$paymentMethod."_";
     }
     public function getOrders()
     {

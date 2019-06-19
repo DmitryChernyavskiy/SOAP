@@ -185,6 +185,10 @@ class QuerySQL
                         }
                         $query .= ")";
                 }
+                elseif ($firstCondition)
+                {
+                        $query = " WHERE (TRUE)";
+                }
                 return $query." /*add_condition*/";
         }
         
