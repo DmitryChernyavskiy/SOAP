@@ -83,17 +83,20 @@ class carMarket
         $res = $query->execution();
         return $res;
     }
-    public function setOrder($idCar, $name, $surName, $pay)
+    public function setOrder($idCar, $name, $surName, $paymentMethod)
     {
-        if (isset($idCar) && isset($name) && isset($surName) && isset($pay))
+        $fd = fopen("/home/user10/public_html/hello.txt", 'w') or die("не удалось создать файл");
+        $str = "setOrder ".$idCar."_".$name."_".$surName."_".$paymentMethod."_";
+        fwrite($fd, $str);
+        fclose($fd);
+        if (isset($idCar) && isset($name) && isset($surName) && isset($paymentMethod))
         {
-            $res = $this->DB->connect()->setTableName("orders_cars")->SetFild("id_car", $idCar)->SetFild("name", $name)->SetFild("surName", $surName)->SetFild("pay", $pay)->insert();
-            return "777".$name."_".$surname."_".$idCar."_".$paymentMethod."_".$this->DB->getQuery();
+            $this->DB->connect()->setTableName("orders_cars")->SetFild("id_car", $idCar)->SetFild("name", $name)->SetFild("surName", $surName)->SetFild("pay", $paymentMethod)->insert();
 
             $this->DB->execution();
-            return true;
+            return $res;
         }
-        return "777".$name."_".$surname."_".$idCar."_".$paymentMethod."_";
+        return false;
     }
     public function getOrders()
     {

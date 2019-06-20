@@ -16,7 +16,7 @@ class Model
         $this->array = array('%TITLE%'=>'Car market');
 	    $this->select = Array('credit card', 'cash');
         $this->resetForm();
-        $this->createSelectList(0);
+        $this->createSelectList($this->select[0]);
     }
     
     private function resetForm()
@@ -46,11 +46,12 @@ class Model
     
     private function createSelectList($selected)
     {
-        $selected = (int)$selected;
+        //$selected = (int)$selected;
         $str = '';
         for($i = 0; $i<count($this->select); $i++)
         {
             $str = $str.'<option value = '.$i.' '.($selected == $i ? 'selected': '').'>'.$this->select[$i].'</option>';
+            //$str = $str.'<option value = '.$this->select[$i].' '.($selected == $this->select[$i] ? 'selected': '').'>'.$this->select[$i].'</option>';
         }
         $this->array['%SELECT%'] = $str;
         $this->array['%SECTION_SELECT%'] = '';
@@ -123,11 +124,17 @@ class Model
     public function setOrder()
     {
         $name = trim($_POST['name']);
-        $surname = trim($_POST['surname']);
+        $surName = trim($_POST['surname']);
         $idCar = trim($_POST['idCar']);
         $paymentMethod = trim($_POST['paymentMethod']);
+
+               
+        $fd = fopen("/home/user10/public_html/hello0.txt", 'w') or die("не удалось создать файл");
+        $str = print_r($_POST,true)."_setOrder ".$idCar."_".$name."_".$surName."_".$paymentMethod."_";
+        fwrite($fd, $str);
+        fclose($fd);
         
-        echo $this->client->setOrder($idCar, $name, $surName, "cash");
+        $this->client->setOrder($idCar, $name, $surName, $this->select[$paymentMethod]);
     }
 
 

@@ -14,6 +14,13 @@
        .boxadd {
         width: 400px;
        }
+       .linkButton { 
+          background: none;
+          border: none;
+          color: #0066ff;
+          text-decoration: underline;
+          cursor: pointer; 
+        }
        
        h4 {
          Margin-bottom: 5px;  
@@ -26,6 +33,11 @@
 </head>
 <body>
 <div><h2>Car market</h2></div>
+<div>
+  <form method="POST">
+  <input type="submit" class="linkButton" name = "order" Value = "order"/>
+  </form>
+</div>
 <div style="%SECTION_SELECT%">
     <form method="POST">
       <table>
