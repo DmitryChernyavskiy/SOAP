@@ -3,7 +3,7 @@ class QuerySQL
 {
         private $tableName, $limit, $filds, $conditions;
         private $join_conditions, $group_filds, $functions, $query="";
-        protected $params, $errortext = "";
+        public $params, $errortext = "";
         
         function __construct()
         {
@@ -30,6 +30,7 @@ class QuerySQL
                         array_splice($this->params, 0);
                         array_splice($this->group_filds, 0);
                         array_splice($this->functions, 0);
+                        //array_splice($this->conditions, 0);
                 }
                 
                 return $this;
@@ -76,6 +77,8 @@ class QuerySQL
                 $name_param = ":param".count($this->params);
                 $this->conditions[$fild] = $name_param;
                 $this->params[$name_param]=$value;
+                //print_r($this->params);
+                //print_r($this->conditions);
                 
                 return $this;
         }
@@ -206,6 +209,7 @@ class QuerySQL
                         $pos2 = strpos($query, "*/");
                         $query = str_replace(substr($query, $pos1, $pos2-$pos1+2), "", $query);
                 }
+                //print_r($this->params);
 
                 return $query;
         }
@@ -220,7 +224,7 @@ class QuerySQL
         
         public function select()
         {
-                $query = "SELECT ";
+                $query = "SELECT DISTINCT ";
                 $separator = "";
                 foreach($this->filds as $key=>$val)
                 {
@@ -332,6 +336,7 @@ class QuerySQL
                 $this->query = str_replace("/*add_condition*/", $add_condition, $this->query);
                 
                 $this->clearQuery();
+                
         }
         
         public function innerJoin()

@@ -16,7 +16,7 @@ class Model
         $this->array = array('%TITLE%'=>'Car market');
 	    $this->select = Array('credit card', 'cash');
         $this->resetForm();
-        $this->createSelectList($this->select[0]);
+        $this->createSelectListPay($this->select[0]);
     }
     
     private function resetForm()
@@ -37,14 +37,17 @@ class Model
         $this->array['%VAL_NAME%'] = '';
         $this->array['%VAL_SURNAME%'] = '';
         $this->array['%VAL_LISTCAR%'] = '';
+        $this->array['%VAL_ORDERS%'] = '';
         $this->array['%VAL_BUTTON%'] = 'Find';
         $this->array['%SECTION_SELECT%'] = 'display: none;';
         $this->array['%SECTION_CLIENTDATA%'] = 'display: none;';
         $this->array['%SECTION_LISTCARS%'] = 'display: none;';
+        $this->array['%SECTION_ORDERS%'] = 'display: none;';
+        $this->array['%EDIT_CARINFO%'] = '';
         
     }
     
-    private function createSelectList($selected)
+    private function createSelectListPay($selected)
     {
         //$selected = (int)$selected;
         $str = '';
@@ -56,6 +59,22 @@ class Model
         $this->array['%SELECT%'] = $str;
         $this->array['%SECTION_SELECT%'] = '';
     }
+
+    private function createSelectList()
+    {
+        $list = $this->client->getDataDescription()['brand'];
+        //var_dump($list);
+        $str ='<select name = "brand" class = "box">
+                <option value = "" >all</option>';;
+        for($i = 0; $i<count($list); $i++)
+        {
+            $str .= '<option value = '.$list[$i].' >'.$list[$i].'</option>';
+            //echo $i.' '.'>'.$list["".$i];
+        }
+        $str .= '</select>';
+        $this->array['%VAL_BRAND%'] = $str;
+    }
+    
        
     public function getArray()
     {	    
@@ -67,8 +86,8 @@ class Model
         $res = "";
         foreach ($list as $row)
         {
-            $res .= '<tr><td>'.$row['id'].'</td><td>'.$row['brand'].'</td><td>'.$row['model'].'</td><td align="center">'
-                    . '<form method="POST" style="margin: 5;"><input type = "hidden" name = "infoCar" Value = '.$row['id'].'><input type = "submit" Value = "info"></form>'
+            $res .= '<tr><td>'.$row['id'].'</td><td>'.$row['brand'].'</td><td>'.$row['model'].'</td><td>'.$row['color'].'</td><td align="center">'
+                    . '<form method="POST" style="margin: 5;"><input type = "hidden" name = "infoCar" Value = '.$row['id'].'><input type = "hidden" name = "color" Value = '.$row['color'].'><input type = "submit" Value = "info"></form>'
                     . '</td></tr>';
         }
         return $res;
@@ -79,18 +98,20 @@ class Model
         $list = $this->client->listCars();
         $this->array['%VAL_LISTCAR%'] = $this->createCarTable($list);
         $this->array['%SECTION_LISTCARS%'] = '';
+
+        $this->createSelectList();
     } 
     
     public function findCars()
     {
-        $volume = $_POST['volume'];
+        /*$volume = $_POST['volume'];
         $speed = $_POST['speed'];
         $year = $_POST['year'];
         $price = $_POST['price'];
         $brand = $_POST['brand'];
         $model = $_POST['model'];
-        $color = $_POST['color'];
-        $list = $this->client->findCars($volume, $speed, $year, $price, $brand, $model, $color);
+        $color = $_POST['color'];*/
+        $list = $this->client->findCars($_POST);
         //print_r($list);
         $this->array['%VAL_LISTCAR%'] = $this->createCarTable($list);
         $this->array['%SECTION_LISTCARS%'] = '';
@@ -99,7 +120,7 @@ class Model
     public function InfoCars()
     {
         $this->resetForm();
-        $list = $this->client->getInfo($_POST['infoCar']);
+        $list = $this->client->getInfo($_POST['infoCar'],$_POST['color']);
         if (0 <= count($list))
         {
             $row = $list[0];
@@ -114,6 +135,7 @@ class Model
             $this->array['%VAL_BUTTON%'] = 'Buy';
             $this->array['%SECTION_SELECT%'] = '';
             $this->array['%SECTION_CLIENTDATA%'] = '';
+            $this->array['%EDIT_CARINFO%'] = 'readonly';
         }
         else
         {
@@ -127,14 +149,21 @@ class Model
         $surName = trim($_POST['surname']);
         $idCar = trim($_POST['idCar']);
         $paymentMethod = trim($_POST['paymentMethod']);
-
-               
-        $fd = fopen("/home/user10/public_html/hello0.txt", 'w') or die("не удалось создать файл");
-        $str = print_r($_POST,true)."_setOrder ".$idCar."_".$name."_".$surName."_".$paymentMethod."_";
-        fwrite($fd, $str);
-        fclose($fd);
         
         $this->client->setOrder($idCar, $name, $surName, $this->select[$paymentMethod]);
+    }
+
+    public function getOrders()
+    {
+        $this->resetForm();
+        $list = $this->client->getOrders();
+        $res = "";
+        foreach ($list as $row)
+        {
+            $res .= '<tr><td>'.$row['id_car'].'</td><td>'.$row['name'].'</td><td>'.$row['surName'].'</td><td>'.$row['pay'].'</td></tr>';
+        }
+        $this->array['%VAL_ORDERS%'] = $res;
+        $this->array['%SECTION_ORDERS%'] = '';
     }
 
 
@@ -148,7 +177,7 @@ class Model
         
         //save values of form
         $this->array['%VAL_NAME%'] = $Name;
-        $this->createSelectList($typemessage);
+        $this->createSelectListPay($typemessage);
         $this->array['%VAL_EMAIL%'] = $email;
         $this->array['%VAL_TEXT%'] = $text;
         

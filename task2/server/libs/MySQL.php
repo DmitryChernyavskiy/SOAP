@@ -44,13 +44,14 @@ class mySQL extends QuerySQL
     
     public function Execution()
     {
-        echo "**".$this->getQuery();
-        print_r($this->params);
+        //echo "**".$this->getQuery();
+        //print_r($this->params);
         try
         {
-            echo $this->getQuery();
+            //echo $this->getQuery();
             $stmt = mySQL::$link->prepare($this->getQuery());
             $stmt->execute($this->params);
+            $this->getQuery();
         }
         catch (PDOException $e)
         {

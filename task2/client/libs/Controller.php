@@ -10,7 +10,7 @@ class Controller
         $this->model = new Model();
         $this->view = new View(TEMPLATE);	
 
-        print_r($_POST);
+        //print_r($_POST);
         $operation = $_POST['button'];
         if(isset($operation))
         {	
@@ -21,6 +21,10 @@ class Controller
             elseif($operation=="Find")
             {
                 $this->pageFindCar();
+            }
+            elseif($operation=="order")
+            {
+                $this->pageOrders();
             }
             else
             {
@@ -65,6 +69,13 @@ class Controller
     private function pageFindCar()
     {
         $this->model->findCars();
+        $mArray = $this->model->getArray();
+        $this->view->addToReplace($mArray);
+    }
+
+    private function pageOrders()
+    {
+        $this->model->getOrders();
         $mArray = $this->model->getArray();
         $this->view->addToReplace($mArray);
     }

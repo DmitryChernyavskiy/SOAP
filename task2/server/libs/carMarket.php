@@ -18,25 +18,43 @@ class carMarket
     {
         $res = $this->DB->connect()->setTableName("cars")->SetFild("id")->select()->
             setTableName("brands")->SetFild("brand")->setJoinConditions("cars.id_brand = brands.id")->leftJoin()->
-            setTableName("models")->SetFild("model")->setJoinConditions("cars.id_model = models.id")->leftJoin()->execution();
+            setTableName("models")->SetFild("model")->setJoinConditions("cars.id_model = models.id")->leftJoin()->
+            setTableName("colors_cars")->setJoinConditions("cars.id = colors_cars.id_car")->leftJoin()->
+            setTableName("colors")->SetFild("color")->setJoinConditions("colors_cars.id_color = colors.id")->leftJoin()->execution();
         return $res;
         //return array(array("id"=>1, "name"=>"test1"), array("id"=>2, "name"=>"test1"));
     }
-    public function getInfo($idCar)
+    public function getInfo($idCar, $color)
     {
         if (isset($idCar))
         {
-            $res = $this->DB->connect()->setTableName("cars")->SetFild("id")->SetFild("volume")->SetFild("speed")->SetFild("year")->SetFild("price")->setConditions("id", $idCar)->select()->
+            $query = $this->DB->connect()->setTableName("cars")->SetFild("id")->SetFild("volume")->SetFild("speed")->SetFild("year")->SetFild("price")->setConditions("id", $idCar)->select()->
                 setTableName("brands")->SetFild("brand")->setJoinConditions("cars.id_brand = brands.id")->leftJoin()->
-                setTableName("models")->SetFild("model")->setJoinConditions("cars.id_model = models.id")->leftJoin()->
-                setTableName("colors_cars")->setJoinConditions("cars.id = colors_cars.id_car")->leftJoin()->
-                setTableName("colors")->SetFild("color")->setJoinConditions("colors_cars.id_color = colors.id")->leftJoin()->execution();
+                setTableName("models")->SetFild("model")->setJoinConditions("cars.id_model = models.id")->leftJoin();
+            if (isset($color) && $color!="")
+            {
+                $query->setTableName("colors_cars")->setJoinConditions("cars.id = colors_cars.id_car")->innerJoin()->
+                setTableName("colors")->SetFild("color")->setConditions("color", $color)->setJoinConditions("colors_cars.id_color = colors.id")->innerJoin();
+            }
+            else
+            {
+                $query->setTableName("colors_cars")->setJoinConditions("cars.id = colors_cars.id_car")->leftJoin()->
+                setTableName("colors")->SetFild("color")->setJoinConditions("colors_cars.id_color = colors.id")->leftJoin();
+            }
+            $res =$query->execution();
             return $res;
         }
         return array();
     }
-    public function findCars($volume, $speed, $year, $price, $brand, $model, $color)
+    public function findCars($var)
     {
+        $volume = $var['volume'];
+        $speed = $var['speed'];
+        $year = $var['year'];
+        $price = $var['price'];
+        $brand = $var['brand'];
+        $model = $var['model'];
+        $color = $var['color'];
         $query = $this->DB->connect()->setTableName("cars")->SetFild("id");
         if (isset($volume) && $volume!=0)
         {
@@ -65,7 +83,7 @@ class carMarket
             $query->setJoinConditions("cars.id_brand = brands.id")->leftJoin();
         };
         //model
-        $query->setTableName("models")->SetFild("model", $model);
+        $query->setTableName("models")->SetFild("model");
         if (isset($model) && $model!="")
         {
             $query->setConditions("model", $model)->setJoinConditions("cars.id_model = models.id")->innerJoin();
@@ -78,17 +96,18 @@ class carMarket
         if (isset($color) && $color!="")
         {
             $query->setTableName("colors_cars")->setJoinConditions("cars.id = colors_cars.id_car")->innerJoin()->
-            setTableName("colors")->SetFild("color", $color)->setConditions("color", $color);
+            setTableName("colors")->SetFild("color")->setConditions("color", $color)->setJoinConditions("colors_cars.id_color = colors.id")->innerJoin();
+        }
+        else
+        {
+            $query->setTableName("colors_cars")->setJoinConditions("cars.id = colors_cars.id_car")->leftJoin()->
+            setTableName("colors")->SetFild("color")->setJoinConditions("colors_cars.id_color = colors.id")->leftJoin();
         };
         $res = $query->execution();
         return $res;
     }
     public function setOrder($idCar, $name, $surName, $paymentMethod)
     {
-        $fd = fopen("/home/user10/public_html/hello.txt", 'w') or die("не удалось создать файл");
-        $str = "setOrder ".$idCar."_".$name."_".$surName."_".$paymentMethod."_";
-        fwrite($fd, $str);
-        fclose($fd);
         if (isset($idCar) && isset($name) && isset($surName) && isset($paymentMethod))
         {
             $this->DB->connect()->setTableName("orders_cars")->SetFild("id_car", $idCar)->SetFild("name", $name)->SetFild("surName", $surName)->SetFild("pay", $paymentMethod)->insert();
@@ -100,7 +119,37 @@ class carMarket
     }
     public function getOrders()
     {
-        $res = $this->DB->connect()->setTableName("orders_cars")->SetFild("id")->SetFild("name")->SetFild("surName")->select()->execution();
+        $res = $this->DB->connect()->setTableName("orders_cars")->SetFild("id_car")->SetFild("name")->SetFild("surName")->SetFild("pay")->select()->execution();
         return $res;
+    }
+
+    private function getColumrVal($table, $key)
+    {
+        $res_arr = array();
+
+        $query = $this->DB->connect();
+        $arr = $query->setTableName($table)->SetFild($key)->select()->execution();
+        foreach($arr as $val)
+        {
+            $res_arr[] = $val[$key];
+        }
+        return $res_arr;
+    }
+
+    public function getDataDescription()
+    {
+        $desc = array();
+
+        
+        $desc['volume'] = $this->getColumrVal("cars", "volume");
+        $desc['speed'] = $this->getColumrVal("cars", "speed");
+        $desc['year'] = $this->getColumrVal("cars", "year");
+        $desc['price'] = $this->getColumrVal("cars", "price");
+        $desc['brand'] = $this->getColumrVal("brands", "brand");
+        $desc['model'] = $this->getColumrVal("models", "model");
+        $desc['color'] = $this->getColumrVal("colors", "color");
+        
+        return $desc;
+
     }
 }
