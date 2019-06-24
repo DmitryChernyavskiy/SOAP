@@ -50,29 +50,43 @@ class Model
     private function createSelectListPay($selected)
     {
         //$selected = (int)$selected;
-        $str = '';
+        $str = '<select name = "paymentMethod" class = "box">';
         for($i = 0; $i<count($this->select); $i++)
         {
             $str = $str.'<option value = '.$i.' '.($selected == $i ? 'selected': '').'>'.$this->select[$i].'</option>';
             //$str = $str.'<option value = '.$this->select[$i].' '.($selected == $this->select[$i] ? 'selected': '').'>'.$this->select[$i].'</option>';
         }
+        $str .= '</select>';
         $this->array['%SELECT%'] = $str;
         $this->array['%SECTION_SELECT%'] = '';
     }
 
-    private function createSelectList()
+    private function createSelec($list, $name)
     {
-        $list = $this->client->getDataDescription()['brand'];
-        //var_dump($list);
-        $str ='<select name = "brand" class = "box">
+        $arr = $list[$name];
+        //print_r($arr);
+        $str ='<select name = "'.$name.'" class = "box">
                 <option value = "" >all</option>';;
-        for($i = 0; $i<count($list); $i++)
+        for($i = 0; $i<count($arr); $i++)
         {
-            $str .= '<option value = '.$list[$i].' >'.$list[$i].'</option>';
+            $str .= '<option value = '.$arr[$i].' >'.$arr[$i].'</option>';
             //echo $i.' '.'>'.$list["".$i];
         }
         $str .= '</select>';
-        $this->array['%VAL_BRAND%'] = $str;
+        return $str;
+    }
+
+    private function createSelectList()
+    {
+        $list = $this->client->getDataDescription();
+        $this->array['%VAL_ID%'] = "all";
+        $this->array['%VAL_BRAND%'] = $this->createSelec($list, "brand");
+        $this->array['%VAL_MODEL%'] = $this->createSelec($list, "model");
+        $this->array['%VAL_YEAR%'] = $this->createSelec($list, "year");
+        $this->array['%VAL_VOLUME%'] = $this->createSelec($list, "volume");
+        $this->array['%VAL_SPEED%'] = $this->createSelec($list, "speed");
+        $this->array['%VAL_COLOR%'] = $this->createSelec($list, "color");
+        $this->array['%VAL_PRICE%'] = $this->createSelec($list, "price");
     }
     
        
@@ -104,17 +118,11 @@ class Model
     
     public function findCars()
     {
-        /*$volume = $_POST['volume'];
-        $speed = $_POST['speed'];
-        $year = $_POST['year'];
-        $price = $_POST['price'];
-        $brand = $_POST['brand'];
-        $model = $_POST['model'];
-        $color = $_POST['color'];*/
         $list = $this->client->findCars($_POST);
-        //print_r($list);
         $this->array['%VAL_LISTCAR%'] = $this->createCarTable($list);
         $this->array['%SECTION_LISTCARS%'] = '';
+
+        $this->createSelectList();
     } 
     
     public function InfoCars()

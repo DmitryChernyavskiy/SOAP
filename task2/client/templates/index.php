@@ -68,38 +68,36 @@
           <th>Values</th>
         </tr>
         <tr>
-          <td>Id</td>
-          <td><input type = "text" class = "box" name = "idCar" value = %VAL_ID% %EDIT_CARINFO%></td>
+          <td>Id:</td>
+          <td>%VAL_ID%</td>
         </tr>
         <tr>
-          <td>Brand</td>
+          <td>Brand:</td>
           <td>%VAL_BRAND%</td>
         </tr>
         <tr>
-          <td>Model</td>
-          <td><input type = "text" class = "box" name = "model" value = %VAL_MODEL% %EDIT_CARINFO%></td>
-          <td><samp class = "ErrorMsg">test1</samp></td>
+          <td>Model:</td>
+          <td>%VAL_MODEL%</td>
         </tr>
         <tr>
-          <td>Year</td>
-          <td><input type="number" class = "box" name = "year" value = %VAL_YEAR% min = "0" max = "2019" %EDIT_CARINFO%></td>
-          <td><samp class = "ErrorMsg">test2</samp></td>
+          <td>Year:</td>
+          <td>%VAL_YEAR%</td>
         </tr>
         <tr>
-          <td>Engine volume</td>
-          <td><input type="number" class = "box" name = "volume" value = %VAL_VOLUME% min = "0" max = "200000" %EDIT_CARINFO%></td>
+          <td>Engine volume:</td>
+          <td>%VAL_VOLUME%</td>
         </tr>
         <tr>
-          <td>Max speed</td>
-          <td><input type="number" class = "box" name = "speed" value = %VAL_SPEED% min = "100" max = "400" %EDIT_CARINFO%></td>
+          <td>Max speed:</td>
+          <td>%VAL_SPEED%</td>
         </tr>
         <tr>
-          <td>Color</td>
-          <td><input type = "text" class = "box" name = "color" value = %VAL_COLOR% %EDIT_CARINFO%></td>
+          <td>Color:</td>
+          <td>%VAL_COLOR%</td>
         </tr>
         <tr>
-          <td>Price</td>
-          <td><input type="number" class = "box" name = "price" value = %VAL_PRICE% min = "10000" max = "70000" %EDIT_CARINFO%></td>
+          <td>Price:</td>
+          <td>%VAL_PRICE%</td>
         </tr>
       </table>
       <div style="%SECTION_CLIENTDATA%">
@@ -116,10 +114,8 @@
           </tr>
           <tr>
             <td>Payment method</td>
-            <td>
-              <select name = "paymentMethod" class = "box">
-                   %SELECT%
-               </select>
+            <td>     
+                %SELECT%
             </td>
           </tr>
         </table>
